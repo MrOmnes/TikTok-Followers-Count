@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>com.streamrunners.internal.users</title>
+    <link rel="stylesheet" href="sdpi.css" />
+    <script src="main_pi.js"></script>
+</head>
+
+<body onload="updateSettings();updateGlobal();">
+    <div class="sdpi-wrapper">
+        <div class="sdpi-heading">API SETUP</div>
+
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">API Key</div>
+            <input class="sdpi-item-value" id="APIKey" value="" onchange="updateGlobal()"
+                placeholder="Enter your RapidApi Key" required />
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">TikTok Username</div>
+            <input class="sdpi-item-value" id="Username" value="" onchange="updateSettings()"
+                placeholder="Enter your TikTok Username" required />
+        </div>
+
+        <div class="sdpi-item">
+            <button class="sdpi-item-value" onclick="openPage(getProviderUrl())">
+                Get my API key
+            </button>
+            <button class="sdpi-item-value"
+                onclick="openPage('github.com/JaouherK/streamDeck-weatherPlugin/issues/new?assignees=JaouherK&labels=bug&template=bug_report.md&title=Bug+report')">
+                Open Documentation or Report Issues
+            </button>
+        </div>
+    </div>
+</body>
+
+</html>

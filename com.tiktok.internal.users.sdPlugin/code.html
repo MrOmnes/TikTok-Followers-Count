@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>com.streamrunners.internal.users</title>
+	<meta charset="utf-8" />
+</head>
+
+<body>
+	<script>
+
+		var websocket = null;
+		var pluginUUID = null;
+		let Username = "";
+		let APIKey = "";
+
+		var DestinationEnum = Object.freeze({ "HARDWARE_AND_SOFTWARE": 0, "HARDWARE_ONLY": 1, "SOFTWARE_ONLY": 2 })
+
+		var timer;
+
+		function getStats(SetTitle, context) {
+			const options = {
+				method: 'GET',
+				headers: {
+					'X-RapidAPI-Host': 'tiktok28.p.rapidapi.com',
+					'X-RapidAPI-Key': APIKey
+				}
+			};
+
+			SetTitle(context, "...");
+
+			fetch('https://tiktok28.p.rapidapi.com/profile/' + Username + '?schemaType=1', options)
+				.then(response => response.json())
+				.then(response => SetTitle(context, response.stats.followerCount.toString()))
+				.catch(err => console.error(err));
+		}
+
+		var counterAction = {
+			type: "com.tiktok.internal.users.action",
+
+			onWillAppear: function (context, settings, coordinates) {
+				const SetTitle = this.SetTitle;
+
+				getStats(SetTitle, context);
+				timer = setInterval(() => getStats(SetTitle, context), 60000);
+			},
+
+			SetTitle: function (context, title) {
+				var json = {
+					"event": "setTitle",
+					"context": context,
+					"payload": {
+						"title": title,
+						"target": DestinationEnum.HARDWARE_AND_SOFTWARE
+					}
+				};
+
+				websocket.send(JSON.stringify(json));
+			},
+
+			SetSettings: function (context, settings) {
+				var json = {
+					"event": "setSettings",
+					"context": context,
+					"payload": settings
+				};
+
+				websocket.send(JSON.stringify(json));
+			}
+		};
+
+		function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, inInfo) {
+			pluginUUID = inPluginUUID
+
+			// Open the web socket
+			websocket = new WebSocket("ws://127.0.0.1:" + inPort);
+
+			function registerPlugin(inPluginUUID) {
+				var json = {
+					"event": inRegisterEvent,
+					"uuid": inPluginUUID
+				};
+
+				websocket.send(JSON.stringify(json));
+			};
+
+			websocket.onopen = function () {
+				// WebSocket is connected, send message
+				registerPlugin(pluginUUID);
+			};
+
+			websocket.onmessage = function (evt) {
+				// Received message from Stream Deck
+				var jsonObj = JSON.parse(evt.data);
+				var event = jsonObj['event'];
+				var action = jsonObj['action'];
+				var context = jsonObj['context'];
+				var jsonPayload = jsonObj['payload'];
+
+				if (event == "willAppear") {
+					var settings = jsonPayload['settings'];
+					var coordinates = jsonPayload['coordinates'];
+					counterAction.onWillAppear(context, settings, coordinates);
+				}
+
+				if (jsonPayload['settings']) {
+					APIKey = jsonPayload['settings']['APIKey'];
+					Username = jsonPayload['settings']['Username'];
+
+					getStats(counterAction.SetTitle, context);
+				}
+			};
+
+			websocket.onclose = function () {
+				clearInterval(timer);
+			};
+		};
+	</script>
+
+</body>
+
+</html>

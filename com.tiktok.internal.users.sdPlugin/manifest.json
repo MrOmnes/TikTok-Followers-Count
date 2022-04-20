@@ -1,0 +1,42 @@
+{
+  "Actions": [
+    {
+      "Icon": "actionIcon",
+      "Name": "TikTok Count",
+      "States": [
+        {
+          "Image": "actionDefaultImage",
+          "TitleAlignment": "bottom",
+          "FontSize": "16"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "How many users are following you on TikTok ? Keep track with this counter.",
+      "UUID": "com.tiktok.internal.users.action"
+    }
+  ],
+  "SDKVersion": 2,
+  "Author": "Omnes",
+  "CodePath": "code.html",
+  "Description": "Display TikTok Followers.",
+  "Name": "TikTok Count",
+  "Icon": "pluginIcon",
+  "PropertyInspectorPath": "pi/main_pi.html",
+  "URL": "https://mromnes.tech",
+  "Version": "1.0.0",
+  "Category": "MrOmnes",
+  "CategoryIcon": "omnesIcon",
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "10.11"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "4.1"
+  }
+}

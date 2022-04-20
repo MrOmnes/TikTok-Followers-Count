@@ -1,0 +1,8 @@
+{
+  "Description": "Display users amount.",
+  "Name": "Users",
+  "com.streamrunners.internal.users.action": {
+    "Name": "SR - Users",
+    "Tooltip": "How many users are registered on StreamRunners? Keep track with this counter."
+  }
+}
